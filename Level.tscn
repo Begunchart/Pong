@@ -1,0 +1,88 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Jugador.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Ball.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Oponente IA.gd" type="Script" id=3]
+[ext_resource path="res://Level.gd" type="Script" id=4]
+[ext_resource path="res://Premium Signature.otf" type="DynamicFontData" id=5]
+[ext_resource path="res://soccer-ball-kick-37625.mp3" type="AudioStream" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 960, 50 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 50, 540 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 59
+font_data = ExtResource( 5 )
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Pared Superior" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pared Superior"]
+position = Vector2( 960, -50 )
+shape = SubResource( 1 )
+
+[node name="Pared Inferior" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pared Inferior"]
+position = Vector2( 960, 1130 )
+shape = SubResource( 1 )
+
+[node name="Area Izquierda" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area Izquierda"]
+position = Vector2( -50, 540 )
+shape = SubResource( 2 )
+
+[node name="Area Derecha" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area Derecha"]
+position = Vector2( 1970, 540 )
+shape = SubResource( 2 )
+
+[node name="Jugador" parent="." instance=ExtResource( 1 )]
+modulate = Color( 0, 1, 0.392157, 1 )
+position = Vector2( 50, 460 )
+
+[node name="Oponente IA" parent="." instance=ExtResource( 1 )]
+modulate = Color( 1, 0.984314, 0.0509804, 1 )
+position = Vector2( 1860, 460 )
+script = ExtResource( 3 )
+
+[node name="Marcador Player" type="Label" parent="."]
+margin_left = 150.0
+margin_top = 150.0
+margin_right = 507.0
+margin_bottom = 208.0
+custom_colors/font_color = Color( 0.262745, 0.929412, 0.34902, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Marcador Player"
+align = 1
+valign = 1
+
+[node name="Marcador Player2" type="Label" parent="."]
+margin_left = 1439.0
+margin_top = 150.0
+margin_right = 1830.0
+margin_bottom = 208.0
+custom_colors/font_color = Color( 0.262745, 0.929412, 0.34902, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Marcador Player2"
+align = 1
+valign = 1
+
+[node name="Ball" parent="." instance=ExtResource( 2 )]
+position = Vector2( 960, 540 )
+
+[node name="Audio Colision" type="AudioStreamPlayer" parent="Ball"]
+stream = ExtResource( 6 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="Area Izquierda" to="." method="_on_Area_Izquierda_body_entered"]
+[connection signal="body_entered" from="Area Derecha" to="." method="_on_Area_Derecha_body_entered"]
+[connection signal="timeout" from="Timer" to="Ball" method="_on_Timer_timeout"]
